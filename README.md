@@ -1,68 +1,76 @@
-# 🚚 Delivery Performance Analytics Dashboard  
+# 🔐 Cybersecurity Log Analysis & Threat Detection  
 **Author:** Rashaad Cage  
-**Role:** Data / IT Analyst  
+**Role:** Cybersecurity Analyst  
 
 ---
 
 ## 📌 Overview  
-This project analyzes delivery performance across multiple warehouses to understand shipping efficiency, delay behavior, cost patterns, and operational bottlenecks.  
-It simulates a real-world logistics environment and demonstrates skills in:
+This project simulates a real-world security investigation using system authentication logs.  
+The goal is to detect suspicious activity such as:
 
-- Data cleaning  
-- KPI calculation  
-- SQL querying  
-- Visual analytics  
-- Dashboard-ready reporting  
+- Brute-force login attempts  
+- Failed → successful login sequences  
+- After-hours access  
+- Privilege escalation events  
+- Unusual or high-risk IP activity  
+
+This project demonstrates core cybersecurity skills including log analysis, threat detection, incident investigation, SQL/KQL-style querying, and incident reporting.
 
 ---
 
 ## 📁 Dataset Description  
-The dataset includes synthetic logistics data with fields such as:
+The dataset (`cyber_logs.csv`) includes simulated SIEM-style log data with fields such as:
 
-- Shipment ID  
-- Warehouse  
-- Region  
-- Distance (miles)  
-- Freight cost  
-- Shipped date  
-- Expected delivery date  
-- Actual delivery date  
+- Timestamp  
+- Username  
+- Source IP  
+- Event Type (login success, login failure, escalation)  
+- Status  
+- Device  
 
-This enables analysis of delivery times, cost efficiency, and delay patterns.
+These logs allow identification of patterns that indicate security threats.
 
 ---
 
 ## 🛠 Tools Used  
-- **Excel** — initial data exploration and cleaning  
-- **SQL** — KPI calculation, filtering, and aggregation  
-- **Power BI** — dashboards and data visualizations  
+- **Excel / CSV Review** — initial log inspection  
+- **Python / Pandas** — log parsing and threat detection logic  
+- **Security Analysis Logic** — building hypotheses and identifying risk  
+- **Visualization** — summary chart included as `cyber_event_chart.png`  
 
 ---
 
-## 📂 Files Included  
-- `logistics_data.csv` — synthetic logistics dataset  
-- `logistics_late_chart.png` — bar chart of on-time vs late deliveries  
-- `README.md` — full project documentation  
+## 🔎 Key Threat Indicators  
+The investigation focuses on detecting:
+
+- Multiple failed login attempts from the same IP (brute force)  
+- Failed logins followed by a successful login (credential compromise)  
+- Privilege escalation events  
+- Logins outside normal business hours  
+- Logins from unfamiliar device names  
+- Suspicious login patterns tied to specific user accounts  
 
 ---
 
-## 📊 Key Metrics (KPIs)  
-- **On-Time Delivery Rate**  
-- **Average Delivery Time**  
-- **Cost per Mile**  
-- **Late Deliveries by Warehouse / Region**  
+## 📊 Visuals  
+This repository includes:
+
+- `cyber_event_chart.png` — a visual summary of flagged suspicious events
+
+Optional visuals you could add:
+
+- Failed login heatmap  
+- Login time distribution chart  
+- High-risk IP summary  
 
 ---
 
-## 🧠 SQL Examples  
+## 🧠 SQL / KQL-Style Queries  
 
-### 1️⃣ On-Time vs Late Deliveries  
+### 1️⃣ Detect brute-force login patterns  
 ```sql
-SELECT
-    CASE
-        WHEN delivered_date <= expected_delivery THEN 'On-Time'
-        ELSE 'Late'
-    END AS delivery_status,
-    COUNT(*) AS total_shipments
-FROM logistics
-GROUP BY delivery_status;
+SELECT source_ip, COUNT(*) AS failed_attempts
+FROM cyber_logs
+WHERE status = 'failed'
+GROUP BY source_ip
+HAVING COUNT(*) > 5;
